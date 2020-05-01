@@ -1,0 +1,17 @@
+[
+{
+	"BusinessRule" : "Aggregate",
+	"VariableCount" : 0,
+	"Variables" : ""
+},
+{
+	"BusinessRule" : "Aggregate Plan",
+	"VariableCount" : 2,
+	"Variables" : ["Year", "Period"]
+},
+{
+	"BusinessRule" : "Aggregate Forecast",
+	"VariableCount" : 3,
+	"Variables" : ["Year", "Period", "Scenario"]
+}
+]
