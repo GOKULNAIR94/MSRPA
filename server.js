@@ -67,7 +67,7 @@ restService.post('/input', function(req, res) {
 		
 		//____________________________ Start ______________________________
 		switch (true) {
-			case ( intentName != null && intentName.indexOf( "HitMe" ) == 0  ):{
+			case ( intentName != null && intentName.indexOf( "WhatCanYouDo" ) == 0  ):{
 				
 				speech = "I got a couple of interesting things. here you go:";
 				
@@ -121,7 +121,7 @@ restService.post('/input', function(req, res) {
                break; 
             }
 			
-			case ( intentName != null && intentName.indexOf( "WhatCanYouDo" ) == 0  ):{
+			case ( intentName != null && intentName.indexOf( "HitMe" ) == 0  ):{
 				
 				speech = "I can run a business rule for now. If you pay me well, very soon I will be  capable of doing much more.";
 				
