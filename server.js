@@ -58,134 +58,151 @@ restService.post('/input', function(req, res) {
 	var userName = req.body.from.name
 	var userId = req.body.from.id
 	
-	console.log("inputquery : "+ inputquery)
-	console.log("Input 1"+userId);
-	GetDialogflow( res, userId, inputquery, function( response ){
-		console.log("Object - " + JSON.stringify(response.result) );
-		var intentName = response.result.metadata.intentName
-		console.log("Intent - " + intentName );
-		
-		//____________________________ Start ______________________________
-		switch (true) {
-			case ( intentName != null && intentName.indexOf( "WhatCanYouDo" ) == 0  ):{
-				
-				speech = "I got a couple of interesting things. here you go:";
-				
-				adapter.processActivity(req, res, async context => {
-					await context.sendActivity(speech);
-					speech = "I can run a business rule on Hyperion.";
-					var card = CardFactory.heroCard(
-						null,
-						null,
-						['Run Aggregation Plan rule ','Run Aggregation Forecast rule']
-					);
-
-					var message = MessageFactory.attachment(card);
-					await context.sendActivity(speech);
-					await context.sendActivity(message);
-					
-					 card = CardFactory.heroCard(
-						"Let's do a survey",
-						['https://www.rushordertees.com/static/879c9da1ee48db913261e685eb23bf59/ff8b7/aaf028b7e51cc456745a2c25b927c9d39e24329f_custom_pocket_t-shirts.jpg'],
-						['Yellow?','Black?']
-					);
-					 message = MessageFactory.attachment(card);
-					await context.sendActivity(message);
-					
-				 card = CardFactory.adaptiveCard({
-				  "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
-				  "type": "AdaptiveCard",
-				  "version": "1.0",
-				  "body": [
-					  {
-						 "type": "TextBlock",
-						 "text": "Press to invoke a function NukeChinaForCoronavirus()"
-					  }
-				  ],
-				  "actions": [
-					  {
-						 "type": "Action.Submit",
-						 "title": "The Button"
-					  }
-				  ]
-				});
-
-					 message = MessageFactory.attachment(card);
-					await context.sendActivity(message);
-					
-					 message = MessageFactory.contentUrl('https://i.pinimg.com/originals/58/a8/77/58a877a134b754a731700c1480894b0e.jpg', 'image/jpeg', 'Hawaii Trip', 'A photo of my family vacation.');
-					await context.sendActivity(message);
-
-				});
-                
-               break; 
-            }
+	if( inputquery == null){
+		speech = "Server down."
+		adapter.processActivity(req, res, async context => {
+			await context.sendActivity(speech);
+		});
+		speech = "Initialising motion sequence....."
+		adapter.processActivity(req, res, async context => {
+			await context.sendActivity(speech);
+		});
+		speech = "Yes, I am back."
+		adapter.processActivity(req, res, async context => {
+			await context.sendActivity(speech);
+		});
+	}
+	else{
+		console.log("inputquery : "+ inputquery)
+		console.log("Input 1"+userId);
+		GetDialogflow( res, userId, inputquery, function( response ){
+			console.log("Object - " + JSON.stringify(response.result) );
+			var intentName = response.result.metadata.intentName
+			console.log("Intent - " + intentName );
 			
-			case ( intentName != null && intentName.indexOf( "HitMe" ) == 0  ):{
-				
-				speech = "I can run a business rule for now. If you pay me well, very soon I will be  capable of doing much more.";
-				
-				adapter.processActivity(req, res, async context => {
+			//____________________________ Start ______________________________
+			switch (true) {
+				case ( intentName != null && intentName.indexOf( "WhatCanYouDo" ) == 0  ):{
 					
-					const card = CardFactory.heroCard(
-						null,
-						null,
-						['Run a business rule','Run aggregate forecast']
-					);
-
-					const message = MessageFactory.attachment(card);
-					await context.sendActivity(speech);
-					await context.sendActivity(message);
-				});
-                
-               break; 
-            }
-			
-			case ( intentName!= null && intentName.indexOf( "Run_BusinessRule" ) == 0  ):{
-				
-				BusinessRule( req, res, intentName, inputquery, response, function( responseBR ){
-					console.log("responseBR : " + responseBR.toString());
+					speech = "I got a couple of interesting things. here you go:";
+					
 					adapter.processActivity(req, res, async context => {
-						await context.sendActivity(responseBR);
+						await context.sendActivity(speech);
+						speech = "I can run a business rule on Hyperion.";
+						var card = CardFactory.heroCard(
+							null,
+							null,
+							['Run Aggregation Plan rule ','Run Aggregation Forecast rule']
+						);
+
+						var message = MessageFactory.attachment(card);
+						await context.sendActivity(speech);
+						await context.sendActivity(message);
+						
+						 card = CardFactory.heroCard(
+							"Let's do a survey",
+							['https://www.rushordertees.com/static/879c9da1ee48db913261e685eb23bf59/ff8b7/aaf028b7e51cc456745a2c25b927c9d39e24329f_custom_pocket_t-shirts.jpg'],
+							['Yellow?','Black?']
+						);
+						 message = MessageFactory.attachment(card);
+						await context.sendActivity(message);
+						
+					 card = CardFactory.adaptiveCard({
+					  "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+					  "type": "AdaptiveCard",
+					  "version": "1.0",
+					  "body": [
+						  {
+							 "type": "TextBlock",
+							 "text": "Press to invoke a function NukeChinaForCoronavirus()"
+						  }
+					  ],
+					  "actions": [
+						  {
+							 "type": "Action.Submit",
+							 "title": "The Button"
+						  }
+					  ]
 					});
-				});
-                
-               break; 
-            }
-			
-			
-			case ( intentName != null && intentName.indexOf( "Default Welcome Intent" ) == 0  ):{
-				speech =  response.result.fulfillment.speech;
-				if( speech == "Name?"){
+
+						 message = MessageFactory.attachment(card);
+						await context.sendActivity(message);
+						
+						 message = MessageFactory.contentUrl('https://i.pinimg.com/originals/58/a8/77/58a877a134b754a731700c1480894b0e.jpg', 'image/jpeg', 'Hawaii Trip', 'A photo of my family vacation.');
+						await context.sendActivity(message);
+
+					});
 					
-					GetDialogflow( res, userId, userName, function( response1 ){
-						speech =  response1.result.fulfillment.speech;
+				   break; 
+				}
+				
+				case ( intentName != null && intentName.indexOf( "HitMe" ) == 0  ):{
+					
+					speech = "I can run a business rule for now. If you pay me well, very soon I will be  capable of doing much more.";
+					
+					adapter.processActivity(req, res, async context => {
+						
+						const card = CardFactory.heroCard(
+							null,
+							null,
+							['Run a business rule','Run aggregate forecast']
+						);
+
+						const message = MessageFactory.attachment(card);
+						await context.sendActivity(speech);
+						await context.sendActivity(message);
+					});
+					
+				   break; 
+				}
+				
+				case ( intentName!= null && intentName.indexOf( "Run_BusinessRule" ) == 0  ):{
+					
+					BusinessRule( req, res, intentName, inputquery, response, function( responseBR ){
+						console.log("responseBR : " + responseBR.toString());
+						adapter.processActivity(req, res, async context => {
+							await context.sendActivity(responseBR);
+						});
+					});
+					
+				   break; 
+				}
+				
+				
+				case ( intentName != null && intentName.indexOf( "Default Welcome Intent" ) == 0  ):{
+					speech =  response.result.fulfillment.speech;
+					if( speech == "Name?"){
+						
+						GetDialogflow( res, userId, userName, function( response1 ){
+							speech =  response1.result.fulfillment.speech;
+							adapter.processActivity(req, res, async context => {
+								await context.sendActivity(speech);
+							});
+							
+						});
+					}
+					else{
+						speech =  response.result.fulfillment.speech;
 						adapter.processActivity(req, res, async context => {
 							await context.sendActivity(speech);
 						});
 						
-					});
+					}
+					
+					break;
 				}
-				else{
+				
+				default : {
 					speech =  response.result.fulfillment.speech;
 					adapter.processActivity(req, res, async context => {
 						await context.sendActivity(speech);
 					});
-					
+					break;
 				}
-				
-				break;
 			}
-			
-			default : {
-				speech =  response.result.fulfillment.speech;
-				adapter.processActivity(req, res, async context => {
-					await context.sendActivity(speech);
-				});
-				break;
-			}
-		}
-		//____________________________ End ______________________________
-    });
+			//____________________________ End ______________________________
+		});
+	}
+	
 
 });
